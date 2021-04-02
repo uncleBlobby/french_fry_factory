@@ -22,6 +22,7 @@
             align-self: center;
             align-content: center;
             height: 100%;
+            width: auto;
         }
         .item-d{
             grid-area: footer;
@@ -93,13 +94,13 @@
             flex-direction:column;
             align-items:center;
             justify-items:stretch;
-            justify-content:start;
+            justify-content:space-between;
         }
 
         #sharpenKnifeButton{
             display:flex;
             flex-direction:column;
-            height: 125px;
+            height: 115px;
             width: 375px;
             justify-content: center;
         }
@@ -107,7 +108,7 @@
         #quickerHandsButton{
             display:flex;
             flex-direction:column;
-            height: 125px;
+            height: 115px;
             width: 375px;
             justify-content: center;
         }
@@ -115,11 +116,24 @@
         #spudSaleSpotterButton{
             display:flex;
             flex-direction:column;
-            height: 125px;
+            height: 115px;
             width: 375px;
             justify-content: center;
         }
-
+        #salesTrainingButton{
+            display:flex;
+            flex-direction:column;
+            height: 115px;
+            width: 375px;
+            justify-content: center;
+        }
+        #autoSlicerButton{
+            display:flex;
+            flex-direction:column;
+            height: 115px;
+            width: 375px;
+            justify-content: center;
+        }
         #sellFriesButton{
             display:flex;
             flex-direction:column;
@@ -225,17 +239,23 @@
                             <p2><div id="knifeSharpenLevelDiv">Current Level: 1</div></p2>
                             <p2><div id="knifeSharpenCostDiv">Cost to Upgrade: $25</div></p2>
                     </button>
-                    <button id="spudSaleSpotterButton">
+                    <button id="spudSaleSpotterButton" onclick="spudSaleSpotter()">
                         <p1>Spud Sale Spotter</p1>
                             <p2>Increases Potatoes per Buy</p2>
                             <p2><div id="spudSaleSpotterLevelDiv">Current Level: 1</div></p2>
                             <p2><div id="spudSaleSpotterCostDiv">Cost to Upgrade: $50</div></p2>
                     </button>
-                    <button id="salesTrainingButton">
+                    <button id="salesTrainingButton" onclick="salesTraining()">
                         <p1>Sales Training</p1>
                             <p2>Increases Sell Price of Fries</p2>
                             <p2><div id="salesTrainingLevelDiv">Current Level: 1</div></p2>
                             <p2><div id="salesTrainingCostDiv">Cost to Upgrade: $100</div></p2>
+                    </button>
+                    <button id="autoSlicerButton" onclick="buyAutoSlicer()">
+                        <p1>Auto Slicer</p1>
+                            <p2>Automagically Slices Fries</p2>
+                            <p2><div id="autoSlicerLevelDiv">Current Level: 1</div></p2>
+                            <p2><div id="autoSlicerCostDiv">Cost to Upgrade: $1000</div></p2>
                     </button>
                 </div>
             </div> 
@@ -246,7 +266,7 @@
 
         var frenchFries = 0;
         var potatoes = 10;
-        var money = 5;
+        var money = 500000;
         var knifeSharpenLevel = 1;
         var knifeSharpenCost = 25;
         var potatoeUsagePerFry = (0.1 / knifeSharpenLevel);
@@ -260,7 +280,17 @@
         var quickerHandsLevel = 1;
         var quickerHandsCost = 10;
 
+        var spudSaleSpotterCost = 50;
+        var spudSaleSpotterLevel = 1;
+
+        var salesTrainingCost = 100;
+        var salesTrainingLevel = 1;
+
+        var autoSlicerCost = 1000;
+        var autoSlicerLevel = 1;
+
         var friesPerClick = 1;
+        var friesPerSecond = 0;
 
         
         
@@ -278,13 +308,24 @@
             gameUpdate();
         }, 2500);
 
+        setInterval(function(){
+            if (potatoes > 0.5){
+                totalFriesEver = totalFriesEver + friesPerSecond;
+                frenchFries = frenchFries + friesPerSecond;
+                potatoes = potatoes - (potatoeUsagePerFry * friesPerClick); 
+                
+                updateDisplays();
+            }
+        }, 1000);
+
         function gameUpdate(){
        
             calculateMarketRates();
         }
 
         function calculateMarketRates(){
-            currentPriceFries = (getRndInteger(0, 100)) / 100;
+            currentPriceFries = ((getRndInteger(0, 100)) / 100) * salesTrainingLevel;
+            
             document.getElementById("currentFriesPriceDiv").innerText = "Current Sell Price: $" + currentPriceFries.toFixed(2);
             
             potatoeCost = getRndInteger(1, 10);
@@ -295,6 +336,7 @@
         function getRndInteger(min, max){
             return Math.floor(Math.random() * (max - min +1)) + min;
         }
+        
         
 
         function makeFries(){
@@ -324,19 +366,60 @@
             } else alert("You don't have enough money.")
         }
 
+        function tooPoor(){
+            alert("You're much too poor for that right now. Keep workin'.")
+        }
+
         function sharpenKnife(){
-            knifeSharpenLevel = knifeSharpenLevel + 1;
-            potatoeUsagePerFry = (0.1 / knifeSharpenLevel)
-            friesPerPotatoe = (1 / potatoeUsagePerFry)
-            knifeSharpenCost = 25 * (knifeSharpenLevel * 1.5);
-            updateDisplays();
+            if (money >= knifeSharpenCost){
+                money = money - knifeSharpenCost;
+                knifeSharpenLevel = knifeSharpenLevel + 1;
+                potatoeUsagePerFry = (0.1 / knifeSharpenLevel)
+                friesPerPotatoe = (1 / potatoeUsagePerFry)
+                knifeSharpenCost = 25 * (knifeSharpenLevel * 1.5);
+                updateDisplays();
+            } else tooPoor();
         }
 
         function quickerHands(){
-            friesPerClick = friesPerClick + 1;
-            quickerHandsLevel ++;
-            quickerHandsCost = 10 * (quickerHandsLevel * 1.5);
-            updateDisplays();
+            if (money >= quickerHandsCost){
+                money = money - quickerHandsCost
+                friesPerClick = friesPerClick + 1;
+                quickerHandsLevel ++;
+                quickerHandsCost = 10 * (quickerHandsLevel * 1.5);
+                updateDisplays();
+            } else tooPoor();
+        }
+
+        function spudSaleSpotter(){
+            if (money >= spudSaleSpotterCost){
+                money = money - spudSaleSpotterCost;
+                potatoeGain = potatoeGain + spudSaleSpotterLevel;
+                spudSaleSpotterLevel ++;
+                spudSaleSpotterCost = 50 * (spudSaleSpotterLevel * 1.5);
+                updateDisplays();
+
+            } else tooPoor();
+        }
+
+        function salesTraining(){
+            if (money >= salesTrainingCost){
+                money = money - salesTrainingCost;
+                salesTrainingLevel ++;
+                salesTrainingCost = 100 * (salesTrainingLevel * 1.5);
+                updateDisplays();
+
+            } else tooPoor();
+        }
+
+        function buyAutoSlicer(){
+            if (money >= autoSlicerCost){
+                money = money - autoSlicerCost;
+                friesPerSecond = friesPerSecond + autoSlicerLevel;
+                autoSlicerLevel ++;
+                autoSlicerCost = 1000 * (autoSlicerLevel * 1.5);
+                updateDisplays();
+            } else tooPoor();
         }
 
         function updateDisplays(){
@@ -349,6 +432,13 @@
             document.getElementById("knifeSharpenCostDiv").innerText = "Cost to Upgrade: $" + knifeSharpenCost.toFixed(2);
             document.getElementById("quickerHandsLevelDiv").innerText = "Current Level: " + quickerHandsLevel;
             document.getElementById("quickerHandsCostDiv").innerText = "Cost to Upgrade: $" + quickerHandsCost.toFixed(2);
+            document.getElementById("spudSaleSpotterLevelDiv").innerText = "Current Level: " + spudSaleSpotterLevel;
+            document.getElementById("spudSaleSpotterCostDiv").innerText = "Cost to Upgrade: $" + spudSaleSpotterCost.toFixed(2);
+            document.getElementById("currentPotatoesPerBuyDiv").innerText = "Potatoes per Buy: " + potatoeGain;
+            document.getElementById("salesTrainingLevelDiv").innerText = "Current Level: " + salesTrainingLevel;
+            document.getElementById("salesTrainingCostDiv").innerText = "Cost to Upgrade: $" + salesTrainingCost.toFixed(2);
+            document.getElementById("autoSlicerLevelDiv").innerText = "Current Level: " + autoSlicerLevel;
+            document.getElementById("autoSlicerCostDiv").innerText = "Cost to Upgrade: $" + autoSlicerCost.toFixed(2);
         }
         
         
