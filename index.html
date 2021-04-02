@@ -4,6 +4,7 @@
     <meta charset="utf-8">
 
     <title>French Fry Factory</title>
+    <link rel="icon" href="frenchFry-1.png.png" type ="image/x-icon">
     <meta name="description" content="French Fry Factory">
     <meta name="author" content="Dustin Christianson">
 
@@ -415,8 +416,9 @@
         function buyAutoSlicer(){
             if (money >= autoSlicerCost){
                 money = money - autoSlicerCost;
+                autoSlicerLevel = autoSlicerLevel + 1;
                 friesPerSecond = friesPerSecond + autoSlicerLevel;
-                autoSlicerLevel ++;
+            
                 autoSlicerCost = 1000 * (autoSlicerLevel * 1.5);
                 updateDisplays();
             } else tooPoor();
