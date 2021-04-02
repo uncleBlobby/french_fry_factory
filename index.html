@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>French Fry Factory</title>
+    <meta name="description" content="French Fry Factory">
+    <meta name="author" content="Dustin Christianson">
+
+    <style>
+        .item-a{
+            grid-area: header;
+            align-self: center;
+           
+        }
+        .item-b{
+            grid-area: main;
+        }
+        .item-c{
+            grid-area: sidebar;
+        
+            align-self: center;
+            align-content: center;
+            height: 100%;
+        }
+        .item-d{
+            grid-area: footer;
+        }
+
+        #cell1A{
+            grid-column: 1 / 1;
+            grid-row: 1 / 1;
+            justify-content: start;
+            align-items:flex-start;
+            width:auto;
+        }
+        #gameContainer{
+            display:grid;
+            height: 800px;
+            width: auto;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            border-style: solid;
+            grid-template-areas:
+                "sidebar header header header"
+                "sidebar main main main"
+                "sidebar main main main"
+                "sidebar footer footer footer";
+            
+        }
+
+        #mainGameBox{
+            display: grid;
+            width: 1200px;
+            height: 600px;
+            border-style: solid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr;
+            margin-top: 100px;
+        }
+
+        .menuButtons{
+            display:block;
+            padding-top: 50px;
+        }
+
+        .menuButtonsCls{
+            display:block;
+            width: 200px;
+            height: 100px;
+        }
+
+        #makeFriesButtonDiv{
+            display:flex;
+            flex-direction:column;
+            height: 600px;
+            align-items:center;
+            justify-items:stretch;
+            justify-content:space-evenly;
+            
+        }
+
+        #makeFriesButton{
+            display:flex;
+            flex-direction:column;
+            height: 275px;
+            width: 375px;
+            justify-content: center;
+        }
+
+        #upgradesDiv{
+            display: flex;
+            flex-direction:column;
+            align-items:center;
+            justify-items:stretch;
+            justify-content:start;
+        }
+
+        #sharpenKnifeButton{
+            display:flex;
+            flex-direction:column;
+            height: 125px;
+            width: 375px;
+            justify-content: center;
+        }
+
+        #quickerHandsButton{
+            display:flex;
+            flex-direction:column;
+            height: 125px;
+            width: 375px;
+            justify-content: center;
+        }
+
+        #spudSaleSpotterButton{
+            display:flex;
+            flex-direction:column;
+            height: 125px;
+            width: 375px;
+            justify-content: center;
+        }
+
+        #sellFriesButton{
+            display:flex;
+            flex-direction:column;
+            height: 275px;
+            width: 375px;
+            justify-content: center;
+        }
+
+        #buyPotatoesButton{
+            display:flex;
+            flex-direction:column;
+            height: 275px;
+            width: 375px;
+            justify-content: center;
+        }
+
+        p1{
+            font-size:28px;
+            
+        }
+
+        p3{
+            font-size:24px;
+            font-family:sans-serif;
+        }
+
+        #fryButtonStats{
+            display:flex;
+            flex-direction:column;
+        }
+        
+        #potatoeButtonStats{
+            display:flex;
+            flex-direction:column;
+        }
+
+        
+        
+    </style>
+</head>
+
+<body>
+
+    <div id="gameContainer">
+        <div class="item-c">
+            <div id="cell1A">
+            <p3><div id="frenchFryCounter">French Fries: 0</div></p3>
+            <p3><div id="potatoeCounter">Potatoes: 10</div></p3>
+            <p3><div id="moneyCounter">Money: $5</div></p3>
+            </div>
+            <div class="menuButtons">
+            <button class="menuButtonsCls">French Fry Factory</button>
+            <!--
+            <button class="menuButtonsCls">Poopy Potatoe Pharm</button>
+            <button class="menuButtonsCls"></button>
+            <button class="menuButtonsCls"></button>
+            -->
+            </div>
+            
+        </div>
+        <div class="item-a">
+          
+        </div>
+        <div id="item-b">
+            <div id="mainGameBox">
+                <div id="makeFriesDiv">
+                    <div id="makeFriesButtonDiv">
+                        <button id="makeFriesButton" onclick="makeFries()">
+                            <p1>Make Fries</p1>
+                            <div id="fryButtonStats">
+                                <p2><div id="friesPerPotatoeDiv">Fries per Potatoe: 10</div></p2>
+                                <p2><div id="friesPerClickDiv">Fries per Click: 1</div></p2>
+                            </div>
+                        </button>
+                        <button id="sellFriesButton" onclick="sellFries()">
+                            <p1>Sell Fries</p1>
+                            <div id="sellFriesButtonStats">
+                                <p2><div id="currentFriesPriceDiv">Current Sell Price: $1</div></p2>
+                            </div>
+
+                        </button>
+                        <button id="buyPotatoesButton" onclick="buyPotatoes()">
+                            <p1>Buy Potatoes</p1>
+                            <div id="potatoeButtonStats">
+                                <p2><div id="currentPotatoeCostDiv">Current Buy Price: $10</div></p2>
+                                <p2><div id="currentPotatoesPerBuyDiv">Potatoes per Buy: 1</div></p2>   
+                            </div>
+
+                        </button>
+                    </div>
+
+                </div>
+                <div id="upgradesDiv">
+                    <button id="quickerHandsButton" onclick="quickerHands()">
+                        <p1>Quicker Hands</p1><br>
+                            <p2>Increases Fries per Click</p2>
+                            <p2><div id="quickerHandsLevelDiv">Current Level: 1</div></p2>
+                            <p2><div id="quickerHandsCostDiv">Cost to Upgrade: $10</div></p2>
+                    </button>
+                    <button id="sharpenKnifeButton" onclick="sharpenKnife()">
+                        <p1>Knife Sharpening</p1>
+                            <p2>Increases Fries per Potatoe</p2>
+                            <p2><div id="knifeSharpenLevelDiv">Current Level: 1</div></p2>
+                            <p2><div id="knifeSharpenCostDiv">Cost to Upgrade: $25</div></p2>
+                    </button>
+                    <button id="spudSaleSpotterButton">
+                        <p1>Spud Sale Spotter</p1>
+                            <p2>Increases Potatoes per Buy</p2>
+                            <p2><div id="spudSaleSpotterLevelDiv">Current Level: 1</div></p2>
+                            <p2><div id="spudSaleSpotterCostDiv">Cost to Upgrade: $50</div></p2>
+                    </button>
+                    <button id="salesTrainingButton">
+                        <p1>Sales Training</p1>
+                            <p2>Increases Sell Price of Fries</p2>
+                            <p2><div id="salesTrainingLevelDiv">Current Level: 1</div></p2>
+                            <p2><div id="salesTrainingCostDiv">Cost to Upgrade: $100</div></p2>
+                    </button>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <script>
+        var totalFriesEver = 0;
+
+        var frenchFries = 0;
+        var potatoes = 10;
+        var money = 5;
+        var knifeSharpenLevel = 1;
+        var knifeSharpenCost = 25;
+        var potatoeUsagePerFry = (0.1 / knifeSharpenLevel);
+        var friesPerPotatoe = (1 / potatoeUsagePerFry);
+        var friesMade = 1;
+        var potatoeCost = 10;
+        var potatoeGain = 1;
+
+        var currentPriceFries = 1;
+
+        var quickerHandsLevel = 1;
+        var quickerHandsCost = 10;
+
+        var friesPerClick = 1;
+
+        
+        
+        var profit;
+
+        
+
+        
+
+        
+        
+        
+        
+        setInterval(function(){
+            gameUpdate();
+        }, 2500);
+
+        function gameUpdate(){
+       
+            calculateMarketRates();
+        }
+
+        function calculateMarketRates(){
+            currentPriceFries = (getRndInteger(0, 100)) / 100;
+            document.getElementById("currentFriesPriceDiv").innerText = "Current Sell Price: $" + currentPriceFries.toFixed(2);
+            
+            potatoeCost = getRndInteger(1, 10);
+            document.getElementById("currentPotatoeCostDiv").innerText = "Current Buy Price: $" + potatoeCost.toFixed(2);
+           
+        }
+
+        function getRndInteger(min, max){
+            return Math.floor(Math.random() * (max - min +1)) + min;
+        }
+        
+
+        function makeFries(){
+            if (potatoes > 0.5){
+            totalFriesEver = totalFriesEver + friesPerClick;
+            frenchFries = frenchFries + friesPerClick;
+            potatoes = potatoes - (potatoeUsagePerFry * friesPerClick);
+            console.log(frenchFries);
+            updateDisplays();
+            } else alert("You're gonna need some potatoes to make any french fries.")
+        }
+
+        function sellFries(){
+            if (frenchFries > 0){
+            profit = frenchFries * currentPriceFries;
+            frenchFries = 0;
+            money = money + profit;
+            updateDisplays();
+            } else alert("You're fresh outta fries bud, better make some more.")
+        }
+
+        function buyPotatoes(){
+            if (money >= potatoeCost){
+            potatoes = potatoes + potatoeGain;
+            money = money - potatoeCost;
+            updateDisplays();
+            } else alert("You don't have enough money.")
+        }
+
+        function sharpenKnife(){
+            knifeSharpenLevel = knifeSharpenLevel + 1;
+            potatoeUsagePerFry = (0.1 / knifeSharpenLevel)
+            friesPerPotatoe = (1 / potatoeUsagePerFry)
+            knifeSharpenCost = 25 * (knifeSharpenLevel * 1.5);
+            updateDisplays();
+        }
+
+        function quickerHands(){
+            friesPerClick = friesPerClick + 1;
+            quickerHandsLevel ++;
+            quickerHandsCost = 10 * (quickerHandsLevel * 1.5);
+            updateDisplays();
+        }
+
+        function updateDisplays(){
+            document.getElementById("frenchFryCounter").innerText = "French Fries: " + frenchFries;
+            document.getElementById("potatoeCounter").innerText = "Potatoes: " + potatoes.toFixed(0);
+            document.getElementById("moneyCounter").innerText = "Money: $" + money.toFixed(2);
+            document.getElementById("friesPerPotatoeDiv").innerText = "Fries per Potatoe: " + friesPerPotatoe;
+            document.getElementById("friesPerClickDiv").innerText = "Fries per Click: " + friesPerClick;
+            document.getElementById("knifeSharpenLevelDiv").innerText = "Current Level: " + knifeSharpenLevel;
+            document.getElementById("knifeSharpenCostDiv").innerText = "Cost to Upgrade: $" + knifeSharpenCost.toFixed(2);
+            document.getElementById("quickerHandsLevelDiv").innerText = "Current Level: " + quickerHandsLevel;
+            document.getElementById("quickerHandsCostDiv").innerText = "Cost to Upgrade: $" + quickerHandsCost.toFixed(2);
+        }
+        
+        
+    </script>
+</body>
+
+</html>
