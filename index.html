@@ -35,6 +35,7 @@
             justify-content: start;
             align-items:flex-start;
             width:auto;
+            margin-top: -35px;
         }
         #gameContainer{
             display:grid;
@@ -58,7 +59,7 @@
             border-style: solid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: 1fr;
-            margin-top: 100px;
+            margin-top: 10px;
         }
 
         .menuButtons{
@@ -97,6 +98,22 @@
             justify-items:stretch;
             justify-content:space-between;
         }
+
+        #superUpgradesDiv{
+            display: flex;
+            flex-direction:column;
+            align-items:center;
+            justify-items:stretch;
+            justify-content:space-between;
+        }
+
+        .superUpgradeBtn{
+            display:flex;
+            flex-direction:column;
+            height: 115px;
+            width: 375px;
+            justify-content: center;
+        } 
 
         #sharpenKnifeButton{
             display:flex;
@@ -180,13 +197,14 @@
 
     <div id="gameContainer">
         <div class="item-c">
+            <div id="frenchFryLogo">
+                <img src="frenchFry-1.png.png" style="width: 64px; height: 64px; padding-left:65px; padding-top:20px;">   
+            </div>
             <div id="cell1A">
-            <p3><div id="frenchFryCounter">French Fries: 0</div></p3>
-            <p3><div id="potatoeCounter">Potatoes: 10</div></p3>
-            <p3><div id="moneyCounter">Money: $5</div></p3>
+            
             </div>
             <div class="menuButtons">
-            <button class="menuButtonsCls">French Fry Factory<img src="frenchFry-1.png.png" style="width: 64px; height: 64px;"></button>
+            <button class="menuButtonsCls">French Fry Factory</button>
             <!--
             <button class="menuButtonsCls">Poopy Potatoe Pharm</button>
             <button class="menuButtonsCls"></button>
@@ -196,7 +214,9 @@
             
         </div>
         <div class="item-a">
-          
+            <p3><div id="frenchFryCounter">French Fries: 0</div></p3>
+            <p3><div id="potatoeCounter">Potatoes: 10</div></p3>
+            <p3><div id="moneyCounter">Money: $5</div></p3>
         </div>
         <div id="item-b">
             <div id="mainGameBox">
@@ -207,6 +227,7 @@
                             <div id="fryButtonStats">
                                 <p2><div id="friesPerPotatoeDiv">Fries per Potatoe: 10</div></p2>
                                 <p2><div id="friesPerClickDiv">Fries per Click: 1</div></p2>
+                                <p2><div id="friesPerSecondDiv">Fries per Second: 0</div></p2>
                             </div>
                         </button>
                         <button id="sellFriesButton" onclick="sellFries()">
@@ -259,6 +280,42 @@
                             <p2><div id="autoSlicerCostDiv">Cost to Upgrade: $1000</div></p2>
                     </button>
                 </div>
+
+
+
+                <div id="superUpgradesDiv">
+                    <button id="conveyorButton" class="superUpgradeBtn" onclick="buyConveyor()">
+                        <p1>Auto-tater Conveyor</p1><br>
+                            <p2>Increases Fries per Second</p2>
+                            <p2><div id="conveyorLevelDiv">Current Level: 0</div></p2>
+                            <p2><div id="conveyorCostDiv">Cost to Upgrade: $10000</div></p2>
+                    </button>
+                    <button id="potatoeHead" class="superUpgradeBtn" onclick=>
+                        <p1>Potatoe Head Purchaser</p1>
+                            <p2>Automatically Buys Potatoes per Second</p2>
+                            <p2><div id="potatoeHeadLevelDiv">Current Level: 0</div></p2>
+                            <p2><div id="potatoeHeadCostDiv">Cost to Upgrade: $250000</div></p2>
+                    </button>
+                    <button id="fastFoodChainBtn" class="superUpgradeBtn" onclick=>
+                        <p1>Fast Food Chain</p1>
+                            <p2>Sell up to 1,000,000 fries per sec (per chain).</p2>
+                            <p2><div id="fastFoodChainLevelDiv">Current Level: 0</div></p2>
+                            <p2><div id="fastFoodChainCostDiv">Cost to Upgrade: $5000000</div></p2>
+                    </button>
+                    <button id="goldenPotatoeBtn" class="superUpgradeBtn" onclick=>
+                        <p1>Golden Potatoe</p1>
+                            <p2>Buy Golden Potatoe</p2>
+                            <p2><div id="goldenPotatoeLevelDiv">Golden Potatoes: 0</div></p2>
+                            <p2><div id="goldenPotatoeCostDiv">Cost to Upgrade: $100000000</div></p2>
+                    </button>
+                    <button id="sellGoldenPotatoes" class="superUpgradeBtn" onclick=>
+                        <p1>Prestige</p1>
+                            <p2>Sell All Golden Potatoes</p2>
+                            <p2><div id="goldenPotatoeLevelDiv">Golden Potatoes: 0</div></p2>
+                            <p2><div id="prestigeBonus">Golden Potatoe Bonus: 0</div></p2>
+                    </button>
+                </div>
+            
             </div> 
         </div>
     </div>
@@ -267,7 +324,7 @@
 
         var frenchFries = 0;
         var potatoes = 10;
-        var money = 5;
+        var money = 5555555555;
         var knifeSharpenLevel = 1;
         var knifeSharpenCost = 25;
         var potatoeUsagePerFry = (0.1 / knifeSharpenLevel);
@@ -293,6 +350,9 @@
         var friesPerClick = 1;
         var friesPerSecond = 0;
 
+        var conveyorLevel = 1;
+        var conveyorCost = 10000;
+
         
         
         var profit;
@@ -311,9 +371,9 @@
 
         setInterval(function(){
             if ((potatoes > 0.5) && (autoSlicerLevel >=1 )){
-                totalFriesEver = totalFriesEver + friesPerSecond;
-                frenchFries = frenchFries + friesPerSecond;
-                potatoes = potatoes - (potatoeUsagePerFry * friesPerClick); 
+                totalFriesEver = totalFriesEver + (friesPerSecond);
+                frenchFries = frenchFries + (friesPerSecond);
+                potatoes = potatoes - (potatoeUsagePerFry * (conveyorLevel + autoSlicerLevel)); 
                 
                 updateDisplays();
             }
@@ -417,10 +477,22 @@
             if (money >= autoSlicerCost){
                 money = money - autoSlicerCost;
                 autoSlicerLevel = autoSlicerLevel + 1;
-                friesPerSecond = friesPerSecond + autoSlicerLevel;
+                friesPerSecond = (friesPerSecond + autoSlicerLevel) * conveyorLevel;
             
                 autoSlicerCost = 1000 * (autoSlicerLevel * 1.5);
                 updateDisplays();
+            } else tooPoor();
+        }
+
+        function buyConveyor(){
+            if (money >= conveyorCost){
+                money = money - conveyorCost;
+                conveyorLevel = conveyorLevel + 1;
+                friesPerSecond = (friesPerSecond + autoSlicerLevel) * conveyorLevel;
+                
+                conveyorCost = 10000 * (conveyorLevel * 1.5);
+                updateDisplays();
+
             } else tooPoor();
         }
 
@@ -441,6 +513,9 @@
             document.getElementById("salesTrainingCostDiv").innerText = "Cost to Upgrade: $" + salesTrainingCost.toFixed(2);
             document.getElementById("autoSlicerLevelDiv").innerText = "Current Level: " + autoSlicerLevel;
             document.getElementById("autoSlicerCostDiv").innerText = "Cost to Upgrade: $" + autoSlicerCost.toFixed(2);
+            document.getElementById("conveyorLevelDiv").innerText = "Current Level: " + conveyorLevel;
+            document.getElementById("conveyorCostDiv").innerText = "Cost to Upgrade: $" + conveyorCost.toFixed(2);
+            document.getElementById("friesPerSecondDiv").innerText = "Fries per second: " + friesPerSecond;
         }
         
         
