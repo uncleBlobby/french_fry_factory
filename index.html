@@ -241,7 +241,8 @@
                             <p1>Buy Potatoes</p1>
                             <div id="potatoeButtonStats">
                                 <p2><div id="currentPotatoeCostDiv">Current Buy Price: $10</div></p2>
-                                <p2><div id="currentPotatoesPerBuyDiv">Potatoes per Buy: 1</div></p2>   
+                                <p2><div id="currentPotatoesPerBuyDiv">Potatoes per Buy: 1</div></p2> 
+                                <p2><div id="potatoesPerSecDiv">Potatoe Buys Per Sec: 0</div></p2>  
                             </div>
 
                         </button>
@@ -290,19 +291,19 @@
                             <p2><div id="conveyorLevelDiv">Current Level: 0</div></p2>
                             <p2><div id="conveyorCostDiv">Cost to Upgrade: $10000</div></p2>
                     </button>
-                    <button id="potatoeHead" class="superUpgradeBtn" onclick=>
+                    <button id="potatoeHead" class="superUpgradeBtn" onclick="buyPotatoeHead()">
                         <p1>Potatoe Head Purchaser</p1>
                             <p2>Automatically Buys Potatoes per Second</p2>
                             <p2><div id="potatoeHeadLevelDiv">Current Level: 0</div></p2>
                             <p2><div id="potatoeHeadCostDiv">Cost to Upgrade: $250000</div></p2>
                     </button>
-                    <button id="fastFoodChainBtn" class="superUpgradeBtn" onclick=>
+                    <button id="fastFoodChainBtn" class="superUpgradeBtn" onclick="buyFastFoodChain()">
                         <p1>Fast Food Chain</p1>
-                            <p2>Sell up to 1,000,000 fries per sec (per chain).</p2>
+                            <p2>Sell 1,000,000 fries per sec (per chain).</p2>
                             <p2><div id="fastFoodChainLevelDiv">Current Level: 0</div></p2>
                             <p2><div id="fastFoodChainCostDiv">Cost to Upgrade: $5000000</div></p2>
                     </button>
-                    <button id="goldenPotatoeBtn" class="superUpgradeBtn" onclick=>
+                    <button id="goldenPotatoeBtn" class="superUpgradeBtn" onclick="buyGoldenPotatoe()">
                         <p1>Golden Potatoe</p1>
                             <p2>Buy Golden Potatoe</p2>
                             <p2><div id="goldenPotatoeLevelDiv">Golden Potatoes: 0</div></p2>
@@ -311,7 +312,7 @@
                     <button id="sellGoldenPotatoes" class="superUpgradeBtn" onclick=>
                         <p1>Prestige</p1>
                             <p2>Sell All Golden Potatoes</p2>
-                            <p2><div id="goldenPotatoeLevelDiv">Golden Potatoes: 0</div></p2>
+                            <p2><div id="goldenPotatoeLevelDiv2">Golden Potatoes: 0</div></p2>
                             <p2><div id="prestigeBonus">Golden Potatoe Bonus: 0</div></p2>
                     </button>
                 </div>
@@ -324,7 +325,7 @@
 
         var frenchFries = 0;
         var potatoes = 10;
-        var money = 5555555555;
+        var money = 5;
         var knifeSharpenLevel = 1;
         var knifeSharpenCost = 25;
         var potatoeUsagePerFry = (0.1 / knifeSharpenLevel);
@@ -353,10 +354,22 @@
         var conveyorLevel = 1;
         var conveyorCost = 10000;
 
+        var potatoeHeadLevel = 0;
+        var potatoeHeadCost = 250000;
+        var potatoeBuyPerSec = 0;
+
+        var fastFoodChainLevel = 0;
+        var fastFoodChainCost = 5000000;
+
+        var fastFoodChainFriesSold;
+
+        var goldenPotatoeCount = 0;
+        var goldenPotatoeCost = 100000000;
+
         
         
         var profit;
-
+        var autoProfit;
         
 
         
@@ -373,10 +386,16 @@
             if ((potatoes > 0.5) && (autoSlicerLevel >=1 )){
                 totalFriesEver = totalFriesEver + (friesPerSecond);
                 frenchFries = frenchFries + (friesPerSecond);
-                potatoes = potatoes - (potatoeUsagePerFry * (conveyorLevel + autoSlicerLevel)); 
+                potatoes = (potatoes - (potatoeUsagePerFry * (conveyorLevel + autoSlicerLevel)) + potatoeBuyPerSec);
+               
                 
                 updateDisplays();
+            if ((frenchFries >= 1000000) && (fastFoodChainLevel > 0)){
+                fastFoodChain();
+                console.log("Selling millions per second");
+                updateDisplays();
             }
+            } 
         }, 1000);
 
         function gameUpdate(){
@@ -437,7 +456,7 @@
                 knifeSharpenLevel = knifeSharpenLevel + 1;
                 potatoeUsagePerFry = (0.1 / knifeSharpenLevel)
                 friesPerPotatoe = (1 / potatoeUsagePerFry)
-                knifeSharpenCost = 25 * (knifeSharpenLevel * 1.5);
+                knifeSharpenCost = 25 * (knifeSharpenLevel * 1.1);
                 updateDisplays();
             } else tooPoor();
         }
@@ -447,7 +466,7 @@
                 money = money - quickerHandsCost
                 friesPerClick = friesPerClick + 1;
                 quickerHandsLevel ++;
-                quickerHandsCost = 10 * (quickerHandsLevel * 1.5);
+                quickerHandsCost = 10 * (quickerHandsLevel * 1.2);
                 updateDisplays();
             } else tooPoor();
         }
@@ -457,7 +476,7 @@
                 money = money - spudSaleSpotterCost;
                 potatoeGain = potatoeGain + spudSaleSpotterLevel;
                 spudSaleSpotterLevel ++;
-                spudSaleSpotterCost = 50 * (spudSaleSpotterLevel * 1.5);
+                spudSaleSpotterCost = 50 * (spudSaleSpotterLevel * 1.3);
                 updateDisplays();
 
             } else tooPoor();
@@ -467,7 +486,7 @@
             if (money >= salesTrainingCost){
                 money = money - salesTrainingCost;
                 salesTrainingLevel ++;
-                salesTrainingCost = 100 * (salesTrainingLevel * 1.5);
+                salesTrainingCost = 100 * (salesTrainingLevel * 1.4);
                 updateDisplays();
 
             } else tooPoor();
@@ -490,9 +509,48 @@
                 conveyorLevel = conveyorLevel + 1;
                 friesPerSecond = (friesPerSecond + autoSlicerLevel) * conveyorLevel;
                 
-                conveyorCost = 10000 * (conveyorLevel * 1.5);
+                conveyorCost = 10000 * (conveyorLevel * 1.6);
                 updateDisplays();
 
+            } else tooPoor();
+        }
+
+        function buyPotatoeHead(){
+            if (money >= potatoeHeadCost){
+                money = money - potatoeHeadCost;
+                potatoeHeadLevel = potatoeHeadLevel + 1;
+                
+                potatoeBuyPerSec = potatoeHeadLevel;
+                potatoeHeadCost = 250000 * (potatoeHeadLevel * 1.7);
+                updateDisplays();
+            } else tooPoor();
+        }
+
+        function buyFastFoodChain(){
+            if (money >= fastFoodChainCost){
+                money = money - fastFoodChainCost;
+                fastFoodChainLevel = fastFoodChainLevel +1;
+                fastFoodChainCost = fastFoodChainCost + (fastFoodChainLevel * 1.8);
+                updateDisplays();
+            } else tooPoor();
+        }
+
+        function fastFoodChain(){
+            
+            fastFoodChainFriesSold = fastFoodChainLevel * 1000000;
+            frenchFries = frenchFries - fastFoodChainFriesSold;
+            autoProfit = fastFoodChainFriesSold * currentPriceFries;
+            money = money + autoProfit;
+            updateDisplays();
+            
+        } 
+
+        function buyGoldenPotatoe(){
+            if (money >= goldenPotatoeCost){
+                money = money - goldenPotatoeCost;
+                goldenPotatoeCount = goldenPotatoeCount + 1;
+                goldenPotatoeCost = goldenPotatoeCost * (goldenPotatoeCount * 1.9);
+                updateDisplays();
             } else tooPoor();
         }
 
@@ -516,6 +574,14 @@
             document.getElementById("conveyorLevelDiv").innerText = "Current Level: " + conveyorLevel;
             document.getElementById("conveyorCostDiv").innerText = "Cost to Upgrade: $" + conveyorCost.toFixed(2);
             document.getElementById("friesPerSecondDiv").innerText = "Fries per second: " + friesPerSecond;
+            document.getElementById("potatoeHeadLevelDiv").innerText = "Current Level: " + potatoeHeadLevel;
+            document.getElementById("potatoeHeadCostDiv").innerText = "Cost to Upgrade: $" + potatoeHeadCost.toFixed(2);
+            document.getElementById("potatoesPerSecDiv").innerText = "Potatoe Buys Per Sec: " + potatoeBuyPerSec.toFixed(2);
+            document.getElementById("fastFoodChainLevelDiv").innerText = "Current Level: " + fastFoodChainLevel;
+            document.getElementById("fastFoodChainCostDiv").innerText = "Cost to Upgrade: $" + fastFoodChainCost.toFixed(2);
+            document.getElementById("goldenPotatoeLevelDiv").innerText = "Golden Potatoes: " + goldenPotatoeCount; 
+            document.getElementById("goldenPotatoeLevelDiv2").innerText = "Golden Potatoes: " + goldenPotatoeCount;
+            document.getElementById("goldenPotatoeCostDiv").innerText = "Cost to Upgrade: $" + goldenPotatoeCost.toFixed(2);
         }
         
         
